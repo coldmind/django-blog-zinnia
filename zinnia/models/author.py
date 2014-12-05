@@ -1,10 +1,14 @@
 """Author model for Zinnia"""
+from django.apps import apps
 from django.db import models
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
 
 from zinnia.managers import entries_published
 from zinnia.managers import EntryRelatedPublishedManager
+
+
+user_app, user_model = settings.AUTH_USER_MODEL.split('.')
 
 
 class AuthorPublishedManager(models.Model):
@@ -19,7 +23,7 @@ class AuthorPublishedManager(models.Model):
 
 
 @python_2_unicode_compatible
-class Author(get_user_model(),
+class Author(apps.get_app_config(user_app).get_model(user_model),
              AuthorPublishedManager):
     """
     Proxy model around :class:`django.contrib.auth.models.get_user_model`.
